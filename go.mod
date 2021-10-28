@@ -1,4 +1,4 @@
-module github.com/korosuke613/playground/terraform/plan-test
+module github.com/korosuke613/tfplantesting
 
 go 1.17
 
