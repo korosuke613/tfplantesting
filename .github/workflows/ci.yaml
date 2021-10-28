@@ -1,0 +1,58 @@
+name: CI
+
+on: push
+
+env:
+  GO_VERSION: 1.17
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-go-with-cache
+        with:
+          go-version: "${{ env.GO_VERSION }}"
+      - uses: golangci/golangci-lint-action@v2
+
+  go-mod-tidy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-go-with-cache
+        with:
+          go-version: "${{ env.GO_VERSION }}"
+      - name: Check tidy
+        run: |
+          go mod tidy
+          git diff --exit-code
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-go-with-cache
+        with:
+          go-version: "${{ env.GO_VERSION }}"
+      - name: Check format
+        run: |
+          make fmt
+          git diff --exit-code
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/setup-go-with-cache
+        with:
+          go-version: "${{ env.GO_VERSION }}"
+      - name: Install gotestsum
+        run: go get gotest.tools/gotestsum
+      - name: Test
+        run: make test
+
+  actionlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: reviewdog/action-actionlint@v1

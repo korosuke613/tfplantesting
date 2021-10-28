@@ -8,7 +8,6 @@ import (
 	"regexp"
 )
 
-
 func GetCompositeActionType(actions *tfjson.Actions) ChangeAction {
 	switch {
 	case actions.NoOp():
@@ -73,12 +72,8 @@ func GetResourceChangesWithData(plan *tfjson.Plan) ChangeResources {
 func GetActions(changeResources ChangeResources) map[tfjson.Action][]tfjson.ResourceChange {
 	actions := map[tfjson.Action][]tfjson.ResourceChange{}
 	for _, resource := range changeResources {
-		for _, action := range resource.Change.Actions{
-			if _, ok := actions[action]; ok {
-				actions[action] = append(actions[action], resource)
-			} else {
-				actions[action] = []tfjson.ResourceChange{resource}
-			}
+		for _, action := range resource.Change.Actions {
+			actions[action] = append(actions[action], resource)
 		}
 	}
 
@@ -89,11 +84,7 @@ func GetCompositeActions(changeResources ChangeResources) map[ChangeAction][]tfj
 	actions := map[ChangeAction][]tfjson.ResourceChange{}
 	for _, resource := range changeResources {
 		action := GetCompositeActionType(&resource.Change.Actions)
-		if _, ok := actions[action]; ok {
-			actions[action] = append(actions[action], resource)
-		} else {
-			actions[action] = []tfjson.ResourceChange{resource}
-		}
+		actions[action] = append(actions[action], resource)
 	}
 
 	return actions
