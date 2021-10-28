@@ -2,7 +2,7 @@ package tfplantesting
 
 import (
 	tfjson "github.com/hashicorp/terraform-json"
-	"github.com/korosuke613/playground/terraform/plan-test/src"
+	tfplantesting "github.com/korosuke613/tfplantesting/src"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
